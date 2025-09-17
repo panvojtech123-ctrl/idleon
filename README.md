@@ -8,7 +8,12 @@ Automatický program v Pythonu, který hraje hru za nás. Snímá obrazovku a au
 ### **17. září 2025** (David)
 * **Nápady na další postup:**
     * Rozdělení projektu do souborů a přejmenování hello.py na main.py (což je standardní název v Pythonu)
-        * main
+        * Přejít na algoritmus 3b
+        * Je nutný výpočet hranic žlutého pole a polohy šipky, aby se dala predikovat její další poloha
+        * Screenshot celé obrazovky trvá velmi dlouho, můžeme se pokusit udělat jen screenshot pro žlutý box a druhý pro šipku
+        * Programu stačí jen jeden cyklus do stisku, pak se musí analyzovat a měnit parametry
+        * Proč nám program po stisku tlačítka začne přeuspořádávat okna?
+        * Skript na vytvoření aktuálního screenshotu
 ```py
 import time
 import pyautogui
@@ -17,24 +22,30 @@ from control_utils import press_random_mouse
 from config import SCREENSHOT_AREA, TARGET_COLORS, Y_COORDS, MAX_SPACES
 
 def main():
-    time.sleep(10)
-    spaces_pressed = 0
-    while spaces_pressed < MAX_SPACES:
-        screenshot = pyautogui.screenshot(region=SCREENSHOT_AREA)
-        should_press = analyze_screenshot(screenshot)
-        
-        if should_press:
-            press_random_mouse()
-            print("Stisknuto.")
-            spaces_pressed += 1
-            
-        # Tady by byla logika pro algoritmus 3b, pokud ho budete chtít použít.
+   cekej_na_start()
+   should_press = False
+   zluty_start,zluty_konec = najdi_zluty()
+   sipka_new = najdi_sipku()
+   while not should_press:
+      sipky_old = sipka_new
+      sipka_new = najdi_sipku()
+      should_press = mam_stisknout(zluty_start,zluty_konec,sipka_old,sipka_new)
+      if should_press:
+         stiskni_neco()
+   print("Program dokončen.")
 
-    print("Program dokončen.")
+def stikni_neco()
+    press_random_mouse()
+    print("Stisknuto.")
+
+def cekej_na_start()
+    time.sleep(10)
+    print("Startujeme")
 
 if __name__ == "__main__":
     main()
 ```
+
 
 ### **16. září 2025** (Vojta + David)
 * **Co se stalo:** Dnešní práce se soustředila na soubor `hallo.py`.
